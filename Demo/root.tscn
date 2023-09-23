@@ -1,0 +1,113 @@
+[gd_scene load_steps=16 format=3 uid="uid://c473fywy60phr"]
+
+[ext_resource type="Script" path="res://addons/COMS/nodes/HighlightObject.gd" id="1_8ga6d"]
+[ext_resource type="Script" path="res://CameraGimbal.gd" id="2_cukr5"]
+[ext_resource type="Script" path="res://addons/COMS/nodes/HighlightRenderer.gd" id="3_bv7gb"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ojycg"]
+data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8gxkl"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pjufj"]
+material = SubResource("StandardMaterial3D_8gxkl")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4bewy"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fbmi5"]
+material = SubResource("StandardMaterial3D_4bewy")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6xrv2"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8nojj"]
+material = SubResource("StandardMaterial3D_6xrv2")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_h0pkr"]
+
+[sub_resource type="Sky" id="Sky_v7tic"]
+sky_material = SubResource("ProceduralSkyMaterial_h0pkr")
+
+[sub_resource type="Environment" id="Environment_aqyd6"]
+background_mode = 2
+sky = SubResource("Sky_v7tic")
+ssao_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2oajn"]
+albedo_color = Color(0.294118, 0.294118, 0.294118, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_8mcki"]
+material = SubResource("StandardMaterial3D_2oajn")
+size = Vector2(30, 30)
+
+[node name="Root" type="Node3D"]
+
+[node name="Cubes" type="Node" parent="."]
+
+[node name="Red" type="StaticBody3D" parent="Cubes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cubes/Red"]
+shape = SubResource("ConcavePolygonShape3D_ojycg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cubes/Red"]
+mesh = SubResource("BoxMesh_pjufj")
+
+[node name="HighlightObject" type="Node" parent="Cubes/Red" node_paths=PackedStringArray("collisionObject", "meshParent")]
+script = ExtResource("1_8ga6d")
+collisionObject = NodePath("..")
+meshParent = NodePath("..")
+
+[node name="Green" type="StaticBody3D" parent="Cubes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cubes/Green"]
+shape = SubResource("ConcavePolygonShape3D_ojycg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cubes/Green"]
+mesh = SubResource("BoxMesh_fbmi5")
+
+[node name="HighlightObject" type="Node" parent="Cubes/Green" node_paths=PackedStringArray("collisionObject", "meshParent")]
+script = ExtResource("1_8ga6d")
+collisionObject = NodePath("..")
+meshParent = NodePath("..")
+
+[node name="Blue" type="StaticBody3D" parent="Cubes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cubes/Blue"]
+shape = SubResource("ConcavePolygonShape3D_ojycg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cubes/Blue"]
+mesh = SubResource("BoxMesh_8nojj")
+
+[node name="HighlightObject" type="Node" parent="Cubes/Blue" node_paths=PackedStringArray("collisionObject", "meshParent")]
+script = ExtResource("1_8ga6d")
+collisionObject = NodePath("..")
+meshParent = NodePath("..")
+
+[node name="Environment" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_aqyd6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(0.707107, 0.612372, -0.353553, 0, 0.5, 0.866025, 0.707107, -0.612372, 0.353553, 0, 5, 0)
+shadow_enabled = true
+
+[node name="FloorPlane" type="MeshInstance3D" parent="Environment"]
+mesh = SubResource("PlaneMesh_8mcki")
+skeleton = NodePath("../..")
+
+[node name="CameraGimbal" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
+script = ExtResource("2_cukr5")
+
+[node name="Camera3D" type="Camera3D" parent="CameraGimbal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
+
+[node name="HighlightRenderer" type="Node" parent="CameraGimbal" node_paths=PackedStringArray("camera")]
+script = ExtResource("3_bv7gb")
+camera = NodePath("../Camera3D")

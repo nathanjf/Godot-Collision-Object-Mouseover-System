@@ -1,0 +1,110 @@
+[gd_scene load_steps=8 format=3 uid="uid://5em8kweih651"]
+
+[ext_resource type="Script" path="res://addons/COMS/nodes/HighlightRenderPipeline.gd" id="2_h3tsg"]
+
+[sub_resource type="Shader" id="Shader_3cfjs"]
+code = "shader_type canvas_item;
+
+uniform int kernel_size = 5;
+uniform sampler2D preprocViewport;
+uniform sampler2D unmodViewport;
+uniform vec4 color : source_color;
+
+void fragment() {
+	// Average over the kernel size, with the current pixel centered
+	vec3 value = vec3(0,0,0);
+	for(int i = -kernel_size/2; i <= kernel_size/2; i++ ) {
+		for(int j = -kernel_size/2; j <= kernel_size/2; j++) {
+			value += texture(preprocViewport, UV + vec2(float(i),float(j)) * SCREEN_PIXEL_SIZE).rgb / float(kernel_size * kernel_size);
+		}
+	}
+	vec3 mask = value - texture(preprocViewport, UV).rgb;
+	vec3 glow = min(vec3(1,1,1), max(vec3(0,0,0), mask)*1.0);
+	COLOR.rgb = glow * color.rgb + texture(unmodViewport, UV).rgb * (1.0 - glow);	
+}
+"
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_p45rr"]
+viewport_path = NodePath("PreprocSubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_khclx"]
+viewport_path = NodePath("UnmodifiedViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7glkb"]
+resource_local_to_scene = true
+shader = SubResource("Shader_3cfjs")
+shader_parameter/kernel_size = 27
+shader_parameter/color = Color(0.968627, 1, 0, 1)
+shader_parameter/preprocViewport = SubResource("ViewportTexture_p45rr")
+shader_parameter/unmodViewport = SubResource("ViewportTexture_khclx")
+
+[sub_resource type="Shader" id="Shader_3cj1p"]
+code = "shader_type canvas_item;
+
+uniform float threshold : hint_range(0.0,1.0);
+
+void fragment() {
+	if (texture(TEXTURE, UV).a > threshold) {
+		COLOR.rgb = vec3(1.0,1.0,1.0);
+	} 
+	else {
+		COLOR.rgb = vec3(0.0,0.0,0.0);
+	}
+	COLOR.a = 1.0;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qjhjx"]
+shader = SubResource("Shader_3cj1p")
+shader_parameter/threshold = 0.0
+
+[node name="HighlightRenderPipeline" type="SubViewportContainer"]
+material = SubResource("ShaderMaterial_7glkb")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+script = ExtResource("2_h3tsg")
+
+[node name="PreprocSubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+gui_disable_input = true
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="PreprocSubViewportContainer" type="SubViewportContainer" parent="PreprocSubViewport"]
+material = SubResource("ShaderMaterial_qjhjx")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="CharacterSubViewport" type="SubViewport" parent="PreprocSubViewport/PreprocSubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+gui_disable_input = true
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="HighlightCamera" type="Camera3D" parent="PreprocSubViewport/PreprocSubViewportContainer/CharacterSubViewport"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
+cull_mask = 1024
+
+[node name="UnmodifiedViewport" type="SubViewport" parent="."]
+handle_input_locally = false
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="SceneCamera" type="Camera3D" parent="UnmodifiedViewport"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
