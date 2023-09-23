@@ -10,7 +10,7 @@ class_name HighlightObject
 @export var meshParent : Node
 
 ## The layer that highlights are being rendered to
-@export_flags_3d_render var outlineRenderLayer = 1024
+@export_flags_3d_render var highlightRenderLayer = 1024
 var meshes : Array[MeshInstance3D]
 
 func _ready():
@@ -20,11 +20,11 @@ func _ready():
 	
 ## Enable the render layer by ORing the bitmask
 func _enable_render_layer(mesh : MeshInstance3D):
-	mesh.layers = mesh.layers | outlineRenderLayer
+	mesh.layers = mesh.layers | highlightRenderLayer
 
 ## Disable the render layer by ANDing the inverse of the bitmask
 func _disable_render_layer(mesh : MeshInstance3D):
-	mesh.layers = mesh.layers & ~(outlineRenderLayer)
+	mesh.layers = mesh.layers & ~(highlightRenderLayer)
 
 ## Recursively add mesh instances to the mesh list
 func update_meshes():
