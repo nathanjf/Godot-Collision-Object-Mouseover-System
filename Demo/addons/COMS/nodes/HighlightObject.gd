@@ -9,6 +9,9 @@ class_name HighlightObject
 ## The root of where the MeshInstance3Ds for this object are contained
 @export var meshParent : Node
 
+## The color this object's highlight should be
+@export var highlightColor : Color = Color.YELLOW
+
 ## The layer that highlights are being rendered to
 @export_flags_3d_render var highlightRenderLayer = 1024
 var meshes : Array[MeshInstance3D]
@@ -38,7 +41,7 @@ func update_meshes():
 	var toVisit : Array[Node] = []
 	toVisit.append(meshParent)
 	while !toVisit.is_empty():
-		var top = toVisit.pop_back()
+		var top = toVisit.pop_front()
 		if top is MeshInstance3D:
 			meshes.append(top)
 
@@ -47,6 +50,7 @@ func update_meshes():
 func _on_mouse_entered():
 	for mesh in meshes:
 		_enable_render_layer(mesh)
+	HighlightCoordinator.set_color(self.highlightColor)
 		
 func _on_mouse_exited():
 	for mesh in meshes:

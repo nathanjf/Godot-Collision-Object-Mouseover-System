@@ -1,11 +1,11 @@
 @tool
 extends EditorPlugin
 
-# COMS just adds 2 classes, it doesn't need any editor initialization.
-# This file is left here for completeness' sake
-
 func _enter_tree():
-	pass
+	# Add to autoloads
+	add_autoload_singleton("HighlightCoordinator", "res://addons/COMS/global/HighlightCoordinator.gd")
+	print("COMS loaded")
 
 func _exit_tree():
-	pass
+	# Remove from autoloads
+	remove_autoload_singleton("HighlightCoordinator")

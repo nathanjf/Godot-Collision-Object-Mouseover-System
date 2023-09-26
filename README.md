@@ -26,38 +26,13 @@ COMS works out of the box with just the proper configuration of the export varia
 
 Check out the included demo project for an example of the plugin in action.
 
-### Setting up a Highlight Object
+## Features
 
-Add a Highlight object to every object in your scene that should be able to be highlighted.
+### Curent
 
-![Highlight Object Parameters](./Assets/HighlightObject.png)
+* Highlight objects on mouseover
+* Per object color
 
-- Collision Object
+### Planned
 
-Each HighlightObject needs a reference to a CollisionObject3D.  This can be anything that inherits CollisionObject3D such as a StaticBody3D or a CharacterBody3D.  It is needed in order to get the ```mouse_entered``` and the ```mouse_exited``` signals.
-
-- Mesh Parent
-
-Each HighlightObject should have a reference to the parent of all the meshes that make up that object.  This can be any node and will vary widely depending on the project implementation.  The less children this node has, the better.  A recursive breadth first search of the children is done to gather all the MeshInstance3Ds that make up an object.
-
-- Highlight Render Layer
-
-This is the layer that object will be rendered to during the HighlightShader.  Make sure nothing else is on the layer you choose.
-
-### Setting up a Highlight Renderer
-
-There should only be one highlight rendered per scene.  The only requirement for a highlight renderer is that it needs to be in the same scene as the primary camera or in some other way connected to the camera.
-
-![Highlight Renderer Parameters](./Assets/HighlightRenderer.png)
-
-- Camera
-
-This is a reference to the active camera in the scene.  The highlight renderer has two internal camera that it uses to render the scene and the highlight effect.  It will disable the camera and update the transforms of the internal cameras to match your scene's camera.
-
-- Highlight Color
-
-This is the color that the highlight will render
-
-- Highlight Render Layer
-
-This must be the same as the layer the objects are rendering to.  This is the layer that the internal camera will use to draw the highlight.
+* Optional depth pass to obscure highlights partially behind objects

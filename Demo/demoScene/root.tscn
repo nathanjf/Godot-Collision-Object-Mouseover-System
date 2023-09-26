@@ -1,8 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://c473fywy60phr"]
+[gd_scene load_steps=16 format=3 uid="uid://yqwwc07qjcaq"]
 
-[ext_resource type="Script" path="res://addons/COMS/nodes/HighlightObject.gd" id="1_8ga6d"]
-[ext_resource type="Script" path="res://CameraGimbal.gd" id="2_cukr5"]
-[ext_resource type="Script" path="res://addons/COMS/nodes/HighlightRenderer.gd" id="3_bv7gb"]
+[ext_resource type="Script" path="res://addons/COMS/nodes/HighlightObject.gd" id="1_4p5y5"]
+[ext_resource type="Script" path="res://demoScene/CameraGimbal.gd" id="2_vhrcm"]
+[ext_resource type="Script" path="res://addons/COMS/nodes/HighlightRenderer.gd" id="3_sfnsw"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ojycg"]
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
@@ -56,9 +56,10 @@ shape = SubResource("ConcavePolygonShape3D_ojycg")
 mesh = SubResource("BoxMesh_pjufj")
 
 [node name="HighlightObject" type="Node" parent="Cubes/Red" node_paths=PackedStringArray("collisionObject", "meshParent")]
-script = ExtResource("1_8ga6d")
+script = ExtResource("1_4p5y5")
 collisionObject = NodePath("..")
 meshParent = NodePath("..")
+highlightColor = Color(0, 1, 1, 1)
 
 [node name="Green" type="StaticBody3D" parent="Cubes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -70,7 +71,7 @@ shape = SubResource("ConcavePolygonShape3D_ojycg")
 mesh = SubResource("BoxMesh_fbmi5")
 
 [node name="HighlightObject" type="Node" parent="Cubes/Green" node_paths=PackedStringArray("collisionObject", "meshParent")]
-script = ExtResource("1_8ga6d")
+script = ExtResource("1_4p5y5")
 collisionObject = NodePath("..")
 meshParent = NodePath("..")
 
@@ -84,9 +85,10 @@ shape = SubResource("ConcavePolygonShape3D_ojycg")
 mesh = SubResource("BoxMesh_8nojj")
 
 [node name="HighlightObject" type="Node" parent="Cubes/Blue" node_paths=PackedStringArray("collisionObject", "meshParent")]
-script = ExtResource("1_8ga6d")
+script = ExtResource("1_4p5y5")
 collisionObject = NodePath("..")
 meshParent = NodePath("..")
+highlightColor = Color(1, 0, 1, 1)
 
 [node name="Environment" type="Node" parent="."]
 
@@ -101,13 +103,13 @@ shadow_enabled = true
 mesh = SubResource("PlaneMesh_8mcki")
 skeleton = NodePath("../..")
 
+[node name="HighlightRenderer" type="Node" parent="." node_paths=PackedStringArray("camera")]
+script = ExtResource("3_sfnsw")
+camera = NodePath("../CameraGimbal/Camera3D")
+
 [node name="CameraGimbal" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
-script = ExtResource("2_cukr5")
+script = ExtResource("2_vhrcm")
 
 [node name="Camera3D" type="Camera3D" parent="CameraGimbal"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
-
-[node name="HighlightRenderer" type="Node" parent="CameraGimbal" node_paths=PackedStringArray("camera")]
-script = ExtResource("3_bv7gb")
-camera = NodePath("../Camera3D")
